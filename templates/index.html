@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>POE Live Alert</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">LOCAL TRADE MONITOR</p>
+        <h1>POE Live Alert</h1>
+        <p class="subtitle">Paste three values, connect to live search, and choose whether to preview or travel to hideouts.</p>
+      </div>
+      <div class="status-pill" id="connection-status" data-state="idle">
+        <span class="status-dot"></span>
+        <span id="connection-label">Idle</span>
+      </div>
+    </header>
+
+    <section class="form-stack" aria-label="Monitor configuration">
+      <article class="input-card">
+        <div class="step-number" aria-hidden="true">1</div>
+        <div class="field-content">
+          <div class="field-heading">
+            <div>
+              <label for="cookie">Cookie Header</label>
+              <p>Paste the complete Cookie request-header value. It is never saved.</p>
+            </div>
+            <button class="text-button" type="button" id="toggle-cookie" aria-controls="cookie">Show</button>
+          </div>
+          <input id="cookie" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"
+                 placeholder="POESESSID=...; POETOKEN=...; cf_clearance=...">
+        </div>
+      </article>
+
+      <article class="input-card">
+        <div class="step-number" aria-hidden="true">2</div>
+        <div class="field-content">
+          <div class="field-heading">
+            <div>
+              <label for="search-url">Search URL</label>
+              <p>Use the API search URL for your realm and league.</p>
+            </div>
+          </div>
+          <input id="search-url" type="url" autocomplete="off" autocapitalize="off" spellcheck="false"
+                 value="https://www.pathofexile.com/api/trade2/search/poe2/Runes%20of%20Aldur">
+        </div>
+      </article>
+
+      <article class="input-card payload-card">
+        <div class="step-number" aria-hidden="true">3</div>
+        <div class="field-content">
+          <div class="field-heading">
+            <div>
+              <label for="payload">Search Payload</label>
+              <p>Paste the JSON request body copied from your custom search.</p>
+            </div>
+            <button class="text-button" type="button" id="validate-json">Validate JSON</button>
+          </div>
+          <textarea id="payload" rows="12" autocomplete="off" autocapitalize="off" spellcheck="false"
+                    placeholder='{"query":{"status":{"option":"securable"}},"sort":{"price":"asc"}}'></textarea>
+          <p class="validation-message" id="validation-message" role="status"></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="controls" aria-label="Monitor controls">
+      <button class="button secondary" type="button" id="start-dry">Start Dry Run</button>
+      <button class="button primary" type="button" id="start-send">Start &amp; Travel to Hideout</button>
+      <button class="button ready" type="button" id="ready-next" disabled>Ready for Next Alert</button>
+      <button class="button danger" type="button" id="stop" disabled>Stop</button>
+      <p class="credential-note"><span aria-hidden="true">●</span> Credentials stay in this Python process only.</p>
+    </section>
+
+    <section class="activity-panel" aria-labelledby="activity-title">
+      <div class="activity-heading">
+        <div>
+          <p class="eyebrow">ACTIVITY</p>
+          <h2 id="activity-title">Live status</h2>
+        </div>
+        <button class="text-button" type="button" id="clear-log">Clear</button>
+      </div>
+      <div class="event-log" id="event-log" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="empty-state" id="empty-state">
+          <span class="empty-icon" aria-hidden="true">↯</span>
+          <p>Ready when you are.</p>
+          <span>Start a dry run to verify your search without travelling to hideouts.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
